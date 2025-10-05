@@ -22,7 +22,21 @@ public class EllipseRenderer implements RendererService {
                     shape.getWidth(), shape.getHeight());
             g.setColor(shape.getColor());
         }
-        g.drawOval(ellipse.getLocation().x, ellipse.getLocation().y,
-                shape.getWidth(), shape.getHeight());
+        int x = ellipse.getLocation().x;
+        int y = ellipse.getLocation().y;
+        int width = shape.getWidth();
+        int height = shape.getHeight();
+
+        if(width < 0) {
+            x = x + width;
+            width = -width;
+        }
+
+        if(height < 0) {
+            y = y + height;
+            height = -height;
+        }
+
+        g.drawOval(x, y, width, height);
     }
 }

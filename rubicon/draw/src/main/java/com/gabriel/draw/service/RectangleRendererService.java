@@ -22,7 +22,21 @@ public class RectangleRendererService implements RendererService {
                     shape.getWidth(), shape.getHeight());
             g.setColor(shape.getColor());
         }
-        g.drawRect(rectangle.getLocation().x, rectangle.getLocation().y,
-                shape.getWidth(), shape.getHeight());
+
+        int x = rectangle.getLocation().x;
+        int y = rectangle.getLocation().y;
+        int width = shape.getWidth();
+        int height = shape.getHeight();
+
+        if(width < 0) {
+            x = x + width;
+            width = -width;
+        }
+
+        if(height < 0) {
+            y = y + height;
+            height = -height;
+        }
+        g.drawRect(x, y, width, height);
     }
 }

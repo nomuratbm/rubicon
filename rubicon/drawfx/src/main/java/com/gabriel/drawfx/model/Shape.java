@@ -24,5 +24,4 @@ public abstract class Shape {
         width = end.x - location.x;
         height = end.y - location.y;
     }
-
 }
