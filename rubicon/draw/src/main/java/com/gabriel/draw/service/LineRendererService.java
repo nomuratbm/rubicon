@@ -18,6 +18,8 @@ public class LineRendererService implements RendererService {
         else {
             g.setColor(shape.getColor());
         }
-        g.drawLine(line.getLocation().x, line.getLocation().y, line.getEnd().x, line.getEnd().y);
+        g.drawLine(line.getLocation().x, line.getLocation().y,
+                line.getLocation().x + line.getWidth(),
+                line.getLocation().y + line.getHeight());
     }
 }

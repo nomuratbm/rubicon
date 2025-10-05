@@ -8,9 +8,9 @@ import java.awt.*;
 
 public class Ellipse extends Shape {
        public Ellipse(Point start, Point end){
-        super(start);
-        this.setEnd(end);
+        super(start, end);
         this.setColor(Color.RED);
+        this.setFill(new Color(0,0,0,0));
         this.setRendererService(new EllipseRenderer());
     }
  }

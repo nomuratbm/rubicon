@@ -8,13 +8,21 @@ import java.awt.*;
 public abstract class Shape {
     int id;
     private Point location;
-    private Point end;
+    // private Point end;
+    int width;
+    int height;
     private Color color;
     private Color fill;
     private RendererService rendererService;
-    public Shape(Point location){
+    public Shape(Point location) {
         this.setLocation(location);
-        this.setEnd(location);
-  }
+        width = 0;
+        height = 0;
+    }
+    public Shape(Point location, Point end) {
+        this.setLocation(location);
+        width = end.x - location.x;
+        height = end.y - location.y;
+    }
 
 }

@@ -1,7 +1,9 @@
 package com.gabriel.draw.service;
 
 import com.gabriel.draw.command.AddShapeCommand;
+import com.gabriel.draw.command.SetColorCommand;
 import com.gabriel.draw.command.SetDrawModeCommand;
+import com.gabriel.draw.command.SetFillCommand;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
@@ -59,7 +61,8 @@ public class DeawingCommandAppService implements AppService {
 
     @Override
     public void setColor(Color color) {
-        appService.setColor(color);
+        Command command = new SetColorCommand(appService, color);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -69,7 +72,8 @@ public class DeawingCommandAppService implements AppService {
 
     @Override
     public void setFill(Color color) {
-        appService.setFill(color);
+        Command command = new SetFillCommand(appService, color);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override

@@ -24,6 +24,8 @@ public class DrawingAppService implements AppService {
         scalerService = new ScalerService();
         drawing.setDrawMode(DrawMode.Idle);
         drawing.setShapeMode(ShapeMode.Line);
+        drawing.setColor(Color.RED);
+        drawing.setFill(new Color(0, 0, 0, 0));
     }
 
     @Override
@@ -82,7 +84,7 @@ public class DrawingAppService implements AppService {
 
     @Override
     public void scale(Shape shape, Point newEnd) {
-        shape.setEnd(newEnd);
+
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.gabriel.draw.controller;
 
+import com.gabriel.draw.command.SetColorCommand;
+import com.gabriel.draw.command.SetFillCommand;
 import com.gabriel.drawfx.ActionCommand;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.CommandService;
@@ -59,8 +61,16 @@ public class ActionController implements ActionListener, CommandService.StackSta
             appService.setShapeMode( ShapeMode.Ellipse);
         }
         if(ActionCommand.SETCOLOR.equals(cmd)) {
-            Color color = JColorChooser.showDialog(null, "Choose a color", appService.getColor());
-            appService.setColor(color);
+            Color color = JColorChooser.showDialog(null, "Choose outline color", appService.getColor());
+            if(color != null) {
+                appService.setColor(color);
+            }
+        }
+        if(ActionCommand.SETFILL.equals(cmd)) {
+            Color fill = JColorChooser.showDialog(null, "Choose fill color", appService.getFill());
+            if(fill != null) {
+                appService.setFill(fill);
+            }
         }
     }
 

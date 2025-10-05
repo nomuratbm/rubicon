@@ -16,18 +16,13 @@ public class EllipseRenderer implements RendererService {
         } else {
             g.setColor(shape.getColor());
         }
-        int x = shape.getLocation().x;
-        int y = shape.getLocation().y;
-        int width = shape.getEnd().x - shape.getLocation().x;
-        int height = shape.getEnd().y - shape.getLocation().y;
-        if (width < 0) {
-            x = shape.getEnd().x;
-            width = -width;
+        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
+            g.setColor(shape.getFill());
+            g.fillOval(ellipse.getLocation().x, ellipse.getLocation().y,
+                    shape.getWidth(), shape.getHeight());
+            g.setColor(shape.getColor());
         }
-        if (height < 0) {
-            y = shape.getEnd().y;
-            height = -height;
-        }
-        g.drawOval(x, y, width, height);
+        g.drawOval(ellipse.getLocation().x, ellipse.getLocation().y,
+                shape.getWidth(), shape.getHeight());
     }
 }

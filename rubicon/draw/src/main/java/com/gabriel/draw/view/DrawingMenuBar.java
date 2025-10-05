@@ -22,6 +22,7 @@ public class DrawingMenuBar extends JMenuBar {
         JMenuItem undoMenuItem = new JMenuItem("Undo");
         JMenuItem redoMenuItem = new JMenuItem("Redo");
         JMenuItem colorMenuItem = new JMenuItem("Color");
+        JMenuItem fillMenuItem = new JMenuItem("Fill");
 
         JMenu editMenu = new JMenu("Edit");
         editMenu.setMnemonic(KeyEvent.VK_E);
@@ -56,8 +57,11 @@ public class DrawingMenuBar extends JMenuBar {
         JMenu propMenu = new JMenu("Properties");
         propMenu.setMnemonic(KeyEvent.VK_P);
         propMenu.add(colorMenuItem);
-        this.add(propMenu);
+        add(propMenu);
         colorMenuItem.setActionCommand(ActionCommand.SETCOLOR);
         colorMenuItem.addActionListener(actionListener);
+        propMenu.add(fillMenuItem);
+        fillMenuItem.setActionCommand(ActionCommand.SETFILL);
+        fillMenuItem.addActionListener(actionListener);
     }
 }

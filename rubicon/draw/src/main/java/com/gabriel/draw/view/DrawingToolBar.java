@@ -19,6 +19,7 @@ public class DrawingToolBar extends JToolBar {
         JButton rectButton = new JButton();
         JButton ovalButton = new JButton();
         JButton colorButton = new JButton();
+        JButton fillButton = new JButton();
 
         String undoLocation = "images/"
                 + "undo"
@@ -94,12 +95,25 @@ public class DrawingToolBar extends JToolBar {
         colorButton.addActionListener(actionListener);
         colorButton.setIcon(new ImageIcon(colorURL, "Set Color"));
 
+        String fillLocation = "images/"
+                + "setfill"
+                + ".png";
+        URL fillURL = DrawingToolBar.class.getResource(fillLocation);
+
+        fillButton.setActionCommand(ActionCommand.SETFILL);
+        fillButton.setFocusable(false);
+        fillButton.setBorderPainted(false);
+        fillButton.setToolTipText("Set Color");
+        fillButton.addActionListener(actionListener);
+        fillButton.setIcon(new ImageIcon(fillURL, "Set Fill"));
+
         add(undoButton);
         add(redoButton);
         add(lineButton);
         add(rectButton);
         add(ovalButton);
         add(colorButton);
+        add(fillButton);
 
         ActionController.addUndoButton(undoButton);
         ActionController.addRedoButton(redoButton);

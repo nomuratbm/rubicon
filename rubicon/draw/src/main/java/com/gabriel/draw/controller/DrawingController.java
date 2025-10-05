@@ -39,18 +39,21 @@ public class DrawingController  implements MouseListener, MouseMotionListener {
             switch (appService.getShapeMode()){
                 case Line:  currentShape = new Line(start, start);
                     currentShape.setColor(appService.getColor());
+                    currentShape.setFill(appService.getFill());
                     currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,false );
                     appService.setDrawMode(DrawMode.MousePressed);
                     break;
                 case Rectangle:
                     currentShape = new Rectangle(start, start);
                     currentShape.setColor(appService.getColor());
+                    currentShape.setFill(appService.getFill());
                     currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,false );
                     appService.setDrawMode(DrawMode.MousePressed);
                     break;
                 case  Ellipse:
                     currentShape = new Ellipse(start, start);
                     currentShape.setColor(appService.getColor());
+                    currentShape.setFill(appService.getFill());
                     currentShape.getRendererService().render(drawingView.getGraphics(), currentShape,false );
                     appService.setDrawMode(DrawMode.MousePressed);
                     break;

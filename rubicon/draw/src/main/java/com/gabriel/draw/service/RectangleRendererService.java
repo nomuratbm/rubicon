@@ -9,25 +9,20 @@ import java.awt.*;
 public class RectangleRendererService implements RendererService {
     @Override
     public void render(Graphics g, Shape shape, boolean xor) {
-        Rectangle line = (Rectangle) shape;
+        Rectangle rectangle = (Rectangle) shape;
         if(xor) {
             g.setXORMode(shape.getColor());
         }
         else {
             g.setColor(shape.getColor());
         }
-        int x = shape.getLocation().x;
-        int y = shape.getLocation().y;
-        int width = shape.getEnd().x-shape.getLocation().x;
-        int height = shape.getEnd().y-shape.getLocation().y;
-        if(width < 0) {
-            x = shape.getEnd().x;
-            width = -width;
+        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
+            g.setColor(shape.getFill());
+            g.fillRect(rectangle.getLocation().x, rectangle.getLocation().y,
+                    shape.getWidth(), shape.getHeight());
+            g.setColor(shape.getColor());
         }
-        if(height < 0) {
-            y = shape.getEnd().y ;
-            height = -height;
-        }
-        g.drawRect(x, y, width, height);
+        g.drawRect(rectangle.getLocation().x, rectangle.getLocation().y,
+                shape.getWidth(), shape.getHeight());
     }
 }
