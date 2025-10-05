@@ -84,7 +84,7 @@ public class DrawingAppService implements AppService {
 
     @Override
     public void scale(Shape shape, Point newEnd) {
-
+        scalerService.scale(shape, newEnd);
     }
 
     @Override
