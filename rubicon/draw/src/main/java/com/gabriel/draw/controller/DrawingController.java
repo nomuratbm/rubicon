@@ -27,11 +27,11 @@ public class DrawingController implements MouseListener, MouseMotionListener {
     private final AppService appService;
 
     private Point start;
-    private Point end;
-    private Point endPoint;
+    private Point lastDragPoint;
     private Handle activeHandle = Handle.NONE;
     private boolean isDraggingShape = false;
     private Shape scaleTargetShape = null;
+    private Point scaleStartPoint = null;
 
     public DrawingController(AppService appService, DrawingView drawingView) {
         this.appService = appService;
@@ -45,8 +45,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         start = e.getPoint();
-        end = e.getPoint();
-        endPoint = e.getPoint();
+        lastDragPoint = e.getPoint();
 
         if (appService.getShapeMode() == ShapeMode.Select) {
             handleSelectionMousePressed(e);
@@ -85,8 +84,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
                 handleDrawingMouseDragged(currentPoint);
             }
 
-            end = currentPoint;
-            endPoint = currentPoint;
+            lastDragPoint = currentPoint;
         }
     }
 
@@ -112,6 +110,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 
                 if (activeHandle != Handle.NONE && selectedShapes.size() == 1) {
                     scaleTargetShape = selectedShapes.get(0);
+                    scaleStartPoint = new Point(scaleTargetShape.getLocation());
                     appService.setDrawMode(DrawMode.MousePressed);
                     return;
                 } else if (boundingBox.contains(point)) {
@@ -134,12 +133,12 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 
     private void handleSelectionMouseDragged(Point currentPoint) {
         if (activeHandle != Handle.NONE && scaleTargetShape != null) {
-            Point scaledEnd = calculateScalePoint(scaleTargetShape, currentPoint, activeHandle);
-            appService.scale(scaleTargetShape, scaledEnd);
+            Point newEnd = calculateScalePoint(scaleTargetShape, start, currentPoint, activeHandle);
+            appService.scale(scaleTargetShape, newEnd);
             appService.repaint();
         } else if (isDraggingShape) {
             List<Shape> selectedShapes = appService.getSelectedShapes();
-            Point delta = new Point(currentPoint.x - end.x, currentPoint.y - end.y);
+            Point delta = new Point(currentPoint.x - lastDragPoint.x, currentPoint.y - lastDragPoint.y);
 
             for (Shape shape : selectedShapes) {
                 Point currentLoc = shape.getLocation();
@@ -151,21 +150,23 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 
     private void handleSelectionMouseReleased(MouseEvent e) {
         if (activeHandle != Handle.NONE && scaleTargetShape != null) {
-            Point newEnd = calculateScalePoint(scaleTargetShape, endPoint, activeHandle);
+            Point currentPoint = e.getPoint();
+            Point newEnd = calculateScalePoint(scaleTargetShape, start, currentPoint, activeHandle);
             ScaleShapeCommand scaleCommand = new ScaleShapeCommand(
                     appService, scaleTargetShape, newEnd
             );
             CommandService.ExecuteCommand(scaleCommand);
 
             scaleTargetShape = null;
+            scaleStartPoint = null;
             activeHandle = Handle.NONE;
         }
         else if (isDraggingShape) {
             List<Shape> selectedShapes = appService.getSelectedShapes();
             if (!selectedShapes.isEmpty()) {
                 Point delta = new Point(
-                        end.x - start.x,
-                        end.y - start.y
+                        lastDragPoint.x - start.x,
+                        lastDragPoint.y - start.y
                 );
 
                 if (delta.x != 0 || delta.y != 0) {
@@ -207,34 +208,38 @@ public class DrawingController implements MouseListener, MouseMotionListener {
         drawingView.setCursor(Cursor.getDefaultCursor());
     }
 
-    private Point calculateScalePoint(Shape shape, Point mousePoint, Handle handle) {
+    private Point calculateScalePoint(Shape shape, Point startPoint, Point currentPoint, Handle handle) {
         Point location = shape.getLocation();
         int width = shape.getWidth();
         int height = shape.getHeight();
 
         int x = location.x;
         int y = location.y;
+
+        int left = x;
+        int top = y;
+        int right = x + width;
+        int bottom = y + height;
+
         if (width < 0) {
-            x += width;
-            width = -width;
+            left = x + width;
+            right = x;
         }
         if (height < 0) {
-            y += height;
-            height = -height;
+            top = y + height;
+            bottom = y;
         }
 
-        Point newEnd = new Point(mousePoint);
-
         return switch (handle) {
-            case NW -> new Point(x + width, y + height);
-            case N -> new Point(x + width, y + height);
-            case NE -> new Point(x, y + height);
-            case E -> new Point(x, y + height);
-            case SE -> new Point(x, y);
-            case S -> new Point(x + width, y);
-            case SW -> new Point(x + width, y);
-            case W -> new Point(x + width, y + height);
-            default -> newEnd;
+            case NW -> new Point(right, bottom);
+            case N -> new Point(right, bottom);
+            case NE -> new Point(left, bottom);
+            case E -> new Point(left, bottom);
+            case SE -> new Point(left, top);
+            case S -> new Point(right, top);
+            case SW -> new Point(right, top);
+            case W -> new Point(right, bottom);
+            default -> currentPoint;
         };
     }
 
@@ -257,18 +262,23 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 
         currentShape.setColor(appService.getColor());
         currentShape.setFill(appService.getFill());
+        currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
+
         appService.setDrawMode(DrawMode.MousePressed);
     }
 
     private void handleDrawingMouseDragged(Point currentPoint) {
         if (currentShape != null) {
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
             appService.scale(currentShape, currentPoint);
-            appService.repaint();
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
         }
     }
 
     private void handleDrawingMouseReleased(MouseEvent e) {
         if (currentShape != null) {
+            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
+
             Point endPoint = e.getPoint();
             appService.scale(currentShape, endPoint);
 

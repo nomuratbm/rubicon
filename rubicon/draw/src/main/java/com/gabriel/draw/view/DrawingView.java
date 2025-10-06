@@ -23,7 +23,6 @@ public class DrawingView extends JPanel {
         super.paintComponent(g);
         Drawing drawing = (Drawing) appService.getModel();
 
-        // Render all shapes
         for (Shape shape : drawing.getShapes()) {
             shape.getRendererService().render(g, shape, false);
         }

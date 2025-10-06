@@ -53,7 +53,7 @@ public class DrawingToolBar extends JToolBar {
                 + ".png";
         URL selectURL = DrawingToolBar.class.getResource(selectLocation);
 
-        selectButton.setActionCommand(ActionCommand.REDO);
+        selectButton.setActionCommand(ActionCommand.SELECT);
         selectButton.setFocusable(false);
         selectButton.setBorderPainted(false);
         selectButton.setToolTipText("Select");
