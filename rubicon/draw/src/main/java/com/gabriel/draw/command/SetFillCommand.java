@@ -19,15 +19,20 @@ public class SetFillCommand implements Command {
     public void execute() {
         prevFill = appService.getFill();
         appService.setFill(fill);
+        if(appService.getView() != null) {
+            appService.repaint();
+        }
     }
 
     @Override
     public void undo() {
         appService.setFill(prevFill);
+        appService.repaint();
     }
 
     @Override
     public void redo() {
         appService.setFill(fill);
+        appService.repaint();
     }
 }
