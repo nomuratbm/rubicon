@@ -21,6 +21,7 @@ public class DrawingMenuBar extends JMenuBar {
 
         JMenuItem undoMenuItem = new JMenuItem("Undo");
         JMenuItem redoMenuItem = new JMenuItem("Redo");
+        JMenuItem selectMenuItem = new JMenuItem("Select");
         JMenuItem colorMenuItem = new JMenuItem("Color");
         JMenuItem fillMenuItem = new JMenuItem("Fill");
 
@@ -37,6 +38,10 @@ public class DrawingMenuBar extends JMenuBar {
         redoMenuItem.setActionCommand(ActionCommand.REDO);
         redoMenuItem.setEnabled(false);
         editMenu.add(redoMenuItem);
+        selectMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+        selectMenuItem.addActionListener(actionListener);
+        selectMenuItem.setActionCommand(ActionCommand.SELECT);
+        editMenu.add(selectMenuItem);
         ActionController.addUndoMenuItem(undoMenuItem);
         ActionController.addRedoMenuItem(redoMenuItem);
 

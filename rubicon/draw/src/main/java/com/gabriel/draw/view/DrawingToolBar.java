@@ -15,6 +15,7 @@ public class DrawingToolBar extends JToolBar {
 
         JButton undoButton = new JButton();
         JButton redoButton = new JButton();
+        JButton selectButton = new JButton();
         JButton lineButton = new JButton();
         JButton rectButton = new JButton();
         JButton ovalButton = new JButton();
@@ -46,6 +47,18 @@ public class DrawingToolBar extends JToolBar {
         redoButton.addActionListener(actionListener);
         redoButton.setIcon(new ImageIcon(redoURL, "Redo"));
         redoButton.setEnabled(false);
+
+        String selectLocation = "images/"
+                + "select"
+                + ".png";
+        URL selectURL = DrawingToolBar.class.getResource(selectLocation);
+
+        selectButton.setActionCommand(ActionCommand.REDO);
+        selectButton.setFocusable(false);
+        selectButton.setBorderPainted(false);
+        selectButton.setToolTipText("Select");
+        selectButton.addActionListener(actionListener);
+        selectButton.setIcon(new ImageIcon(selectURL, "Select"));
 
         String lineLocation = "images/"
                 + "line"
@@ -109,6 +122,7 @@ public class DrawingToolBar extends JToolBar {
 
         add(undoButton);
         add(redoButton);
+        add(selectButton);
         add(lineButton);
         add(rectButton);
         add(ovalButton);
