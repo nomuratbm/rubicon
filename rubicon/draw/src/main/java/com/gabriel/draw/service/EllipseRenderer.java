@@ -16,12 +16,7 @@ public class EllipseRenderer implements RendererService {
         } else {
             g.setColor(shape.getColor());
         }
-        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
-            g.setColor(shape.getFill());
-            g.fillOval(ellipse.getLocation().x, ellipse.getLocation().y,
-                    shape.getWidth(), shape.getHeight());
-            g.setColor(shape.getColor());
-        }
+
         int x = ellipse.getLocation().x;
         int y = ellipse.getLocation().y;
         int width = shape.getWidth();
@@ -36,7 +31,11 @@ public class EllipseRenderer implements RendererService {
             y = y + height;
             height = -height;
         }
-
+        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
+            g.setColor(shape.getFill());
+            g.fillOval(x, y, width, height);
+            g.setColor(shape.getColor());
+        }
         g.drawOval(x, y, width, height);
     }
 }

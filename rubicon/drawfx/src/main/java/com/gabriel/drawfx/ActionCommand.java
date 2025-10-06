@@ -8,4 +8,5 @@ public class ActionCommand {
     static final public String ELLIPSE = "ellipse";
     static final public String SETCOLOR = "color";
     static final public String SETFILL = "fill";
+    static final public String SELECT = "select";
 }

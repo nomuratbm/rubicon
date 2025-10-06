@@ -13,6 +13,7 @@ import com.gabriel.drawfx.service.AppService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class DeawingCommandAppService implements AppService {
     public AppService appService;
@@ -95,6 +96,26 @@ public class DeawingCommandAppService implements AppService {
     @Override
     public void delete(Shape shape) {
         appService.delete(shape);
+    }
+
+    @Override
+    public void select(Shape shape) {
+        appService.select(shape);
+    }
+
+    @Override
+    public void clear() {
+        appService.clear();
+    }
+
+    @Override
+    public List<Shape> getSelectedShapes() {
+        return appService.getSelectedShapes();
+    }
+
+    @Override
+    public Shape findShapeAt(Point point) {
+        return appService.findShapeAt(point);
     }
 
     @Override

@@ -51,14 +51,25 @@ public class ActionController implements ActionListener, CommandService.StackSta
         if(ActionCommand.REDO.equals(cmd)) {
             appService.redo();
         }
+        if(ActionCommand.SELECT.equals(cmd)) {
+            appService.setShapeMode(ShapeMode.Select);
+            appService.clear();
+            appService.repaint();
+        }
         if(ActionCommand.LINE.equals(cmd)){
             appService.setShapeMode( ShapeMode.Line);
+            appService.clear();
+            appService.repaint();
         }
         if(ActionCommand.RECT.equals(cmd)){
             appService.setShapeMode( ShapeMode.Rectangle);
+            appService.clear();
+            appService.repaint();
         }
         if(ActionCommand.ELLIPSE.equals(cmd)){
             appService.setShapeMode( ShapeMode.Ellipse);
+            appService.clear();
+            appService.repaint();
         }
         if(ActionCommand.SETCOLOR.equals(cmd)) {
             Color color = JColorChooser.showDialog(null, "Choose outline color", appService.getColor());

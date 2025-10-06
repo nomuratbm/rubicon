@@ -16,12 +16,6 @@ public class RectangleRendererService implements RendererService {
         else {
             g.setColor(shape.getColor());
         }
-        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
-            g.setColor(shape.getFill());
-            g.fillRect(rectangle.getLocation().x, rectangle.getLocation().y,
-                    shape.getWidth(), shape.getHeight());
-            g.setColor(shape.getColor());
-        }
 
         int x = rectangle.getLocation().x;
         int y = rectangle.getLocation().y;
@@ -36,6 +30,12 @@ public class RectangleRendererService implements RendererService {
         if(height < 0) {
             y = y + height;
             height = -height;
+        }
+
+        if(!xor && shape.getFill() != null && shape.getFill().getAlpha() > 0) {
+            g.setColor(shape.getFill());
+            g.fillRect(x, y, width, height);
+            g.setColor(shape.getColor());
         }
         g.drawRect(x, y, width, height);
     }

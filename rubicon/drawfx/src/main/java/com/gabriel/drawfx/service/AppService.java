@@ -6,6 +6,7 @@ import com.gabriel.drawfx.model.Shape;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public interface AppService {
     void undo();
@@ -28,6 +29,11 @@ public interface AppService {
 
     void create(Shape shape);
     void delete(Shape shape);
+
+    void select(Shape shape);
+    void clear();
+    List<Shape> getSelectedShapes();
+    Shape findShapeAt(Point point);
 
     void close();
 

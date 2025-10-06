@@ -11,6 +11,8 @@ import com.gabriel.drawfx.service.ScalerService;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class DrawingAppService implements AppService {
 
@@ -99,6 +101,35 @@ public class DrawingAppService implements AppService {
     }
 
     @Override
+    public void select(Shape shape) {
+        if(shape != null && !drawing.getSelectedShapes().contains(shape)) {
+            drawing.getSelectedShapes().add(shape);
+        }
+    }
+
+    @Override
+    public void clear() {
+        drawing.getSelectedShapes().clear();
+    }
+
+    @Override
+    public List<Shape> getSelectedShapes() {
+        return new ArrayList<>(drawing.getSelectedShapes());
+    }
+
+    @Override
+    public Shape findShapeAt(Point point) {
+        List<Shape> shapes = drawing.getShapes();
+        for (int i = shapes.size() - 1; i >= 0; i--) {
+            Shape shape = shapes.get(i);
+            if (isPointInShape(shape, point)) {
+                return shape;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void close() {
         System.exit(0);
     }
@@ -121,5 +152,25 @@ public class DrawingAppService implements AppService {
     @Override
     public void repaint() {
         drawingView.repaint();
+    }
+
+    private boolean isPointInShape(Shape shape, Point point) {
+        int x = shape.getLocation().x;
+        int y = shape.getLocation().y;
+        int width = shape.getWidth();
+        int height = shape.getHeight();
+
+        if (width < 0) {
+            x += width;
+            width = -width;
+        }
+        if (height < 0) {
+            y += height;
+            height = -height;
+        }
+
+        int tolerance = 5;
+        return point.x >= x - tolerance && point.x <= x + width + tolerance &&
+                point.y >= y - tolerance && point.y <= y + height + tolerance;
     }
 }
