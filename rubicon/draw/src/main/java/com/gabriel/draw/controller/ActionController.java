@@ -60,16 +60,19 @@ public class ActionController implements ActionListener, CommandService.StackSta
             appService.setShapeMode( ShapeMode.Line);
             appService.clear();
             appService.repaint();
+            resetCursor();
         }
         if(ActionCommand.RECT.equals(cmd)){
             appService.setShapeMode( ShapeMode.Rectangle);
             appService.clear();
             appService.repaint();
+            resetCursor();
         }
         if(ActionCommand.ELLIPSE.equals(cmd)){
             appService.setShapeMode( ShapeMode.Ellipse);
             appService.clear();
             appService.repaint();
+            resetCursor();
         }
         if(ActionCommand.SETCOLOR.equals(cmd)) {
             Color color = JColorChooser.showDialog(null, "Choose outline color", appService.getColor());
@@ -98,6 +101,13 @@ public class ActionController implements ActionListener, CommandService.StackSta
         }
         for(JButton button : redoButtons) {
             button.setEnabled(canRedo);
+        }
+    }
+
+    private void resetCursor() {
+        JPanel view = appService.getView();
+        if (view != null) {
+            view.setCursor(Cursor.getDefaultCursor());
         }
     }
 }
