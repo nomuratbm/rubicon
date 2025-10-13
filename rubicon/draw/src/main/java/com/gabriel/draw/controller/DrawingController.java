@@ -7,7 +7,6 @@ import com.gabriel.draw.command.SelectShapeCommand;
 import com.gabriel.draw.model.Ellipse;
 import com.gabriel.draw.model.Line;
 import com.gabriel.draw.model.Rectangle;
-import com.gabriel.drawfx.service.ScalerService;
 import com.gabriel.draw.service.SelectionRendererService;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.Handle;
@@ -150,8 +149,13 @@ public class DrawingController implements MouseListener, MouseMotionListener {
     private void handleSelectionMouseDragged(Point currentPoint) {
         if (activeHandle != Handle.NONE && scaleTargetShape != null) {
 
-            ScalerService.scaleWithHandle(scaleTargetShape, scaleOriginalLocation,
-                    scaleOriginalWidth, scaleOriginalHeight, currentPoint, activeHandle);
+            scaleTargetShape.setLocation(new Point(scaleOriginalLocation));
+            scaleTargetShape.setWidth(scaleOriginalWidth);
+            scaleTargetShape.setHeight(scaleOriginalHeight);
+
+            Point newEnd = calculateScaleEndPoint(scaleOriginalLocation, scaleOriginalWidth,
+                    scaleOriginalHeight, currentPoint, activeHandle);
+            appService.scale(scaleTargetShape, newEnd);
             appService.repaint();
         } else if (isDraggingShape) {
 
@@ -170,10 +174,15 @@ public class DrawingController implements MouseListener, MouseMotionListener {
         if (activeHandle != Handle.NONE && scaleTargetShape != null) {
             Point currentPoint = e.getPoint();
 
+            scaleTargetShape.setLocation(new Point(scaleOriginalLocation));
+            scaleTargetShape.setWidth(scaleOriginalWidth);
+            scaleTargetShape.setHeight(scaleOriginalHeight);
+
+            Point newEnd = calculateScaleEndPoint(scaleOriginalLocation, scaleOriginalWidth,
+                    scaleOriginalHeight, currentPoint, activeHandle);
+
             ScaleShapeCommand scaleCommand = new ScaleShapeCommand(
-                    appService, scaleTargetShape,
-                    scaleOriginalLocation, scaleOriginalWidth, scaleOriginalHeight,
-                    currentPoint, activeHandle
+                    appService, scaleTargetShape, newEnd
             );
             CommandService.ExecuteCommand(scaleCommand);
 
@@ -238,6 +247,58 @@ public class DrawingController implements MouseListener, MouseMotionListener {
         }
 
         drawingView.setCursor(Cursor.getDefaultCursor());
+    }
+
+    private Point calculateScaleEndPoint(Point originalLoc, int originalWidth, int originalHeight,
+                                         Point mousePoint, Handle handle) {
+
+        int left = originalLoc.x;
+        int top = originalLoc.y;
+        int right = originalLoc.x + originalWidth;
+        int bottom = originalLoc.y + originalHeight;
+
+        if (originalWidth < 0) {
+            left = originalLoc.x + originalWidth;
+            right = originalLoc.x;
+        }
+        if (originalHeight < 0) {
+            top = originalLoc.y + originalHeight;
+            bottom = originalLoc.y;
+        }
+
+        switch (handle) {
+            case NW:
+
+                scaleTargetShape.setLocation(mousePoint);
+                return new Point(right, bottom);
+            case N:
+
+                scaleTargetShape.setLocation(new Point(left, mousePoint.y));
+                return new Point(right, bottom);
+            case NE:
+
+                scaleTargetShape.setLocation(new Point(left, mousePoint.y));
+                return new Point(mousePoint.x, bottom);
+            case E:
+
+                return new Point(mousePoint.x, bottom);
+            case SE:
+
+                return new Point(mousePoint.x, mousePoint.y);
+            case S:
+
+                return new Point(right, mousePoint.y);
+            case SW:
+
+                scaleTargetShape.setLocation(new Point(mousePoint.x, top));
+                return new Point(right, mousePoint.y);
+            case W:
+
+                scaleTargetShape.setLocation(new Point(mousePoint.x, top));
+                return new Point(right, bottom);
+            default:
+                return mousePoint;
+        }
     }
 
     private void handleDrawingMousePressed(MouseEvent e) {

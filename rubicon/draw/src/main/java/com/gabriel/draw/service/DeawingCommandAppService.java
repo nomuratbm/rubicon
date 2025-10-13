@@ -5,7 +5,6 @@ import com.gabriel.draw.command.SetColorCommand;
 import com.gabriel.draw.command.SetDrawModeCommand;
 import com.gabriel.draw.command.SetFillCommand;
 import com.gabriel.drawfx.DrawMode;
-import com.gabriel.drawfx.Handle;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.command.Command;
 import com.gabriel.drawfx.command.CommandService;
@@ -84,9 +83,8 @@ public class DeawingCommandAppService implements AppService {
     }
 
     @Override
-    public void scale(Shape shape, Point originalLocation, int originalWidth,
-                      int originalHeight, Point mousePoint, Handle handle) {
-        appService.scale(shape, originalLocation, originalWidth, originalHeight, mousePoint, handle);
+    public void scale(Shape shape, Point newEnd) {
+        appService.scale(shape,newEnd);
     }
 
     @Override
