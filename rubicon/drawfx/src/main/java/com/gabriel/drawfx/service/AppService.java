@@ -1,6 +1,7 @@
 package com.gabriel.drawfx.service;
 
 import com.gabriel.drawfx.DrawMode;
+import com.gabriel.drawfx.Handle;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.model.Shape;
 
@@ -26,6 +27,9 @@ public interface AppService {
 
     void move(Shape shape, Point newLoc);
     void scale(Shape shape, Point newEnd);
+
+    void scale(Shape shape, Point originalLocation, int originalWidth,
+               int originalHeight, Point mousePoint, Handle handle);
 
     void create(Shape shape);
     void delete(Shape shape);

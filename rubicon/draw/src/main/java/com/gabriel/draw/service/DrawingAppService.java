@@ -1,7 +1,7 @@
 package com.gabriel.draw.service;
 
-import com.gabriel.draw.view.DrawingView;
 import com.gabriel.drawfx.DrawMode;
+import com.gabriel.drawfx.Handle;
 import com.gabriel.drawfx.ShapeMode;
 import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
@@ -85,8 +85,9 @@ public class DrawingAppService implements AppService {
         moverService.move(shape, newLoc);}
 
     @Override
-    public void scale(Shape shape, Point newEnd) {
-        scalerService.scale(shape, newEnd);
+    public void scale(Shape shape, Point originalLocation, int originalWidth,
+                      int originalHeight, Point mousePoint, Handle handle) {
+        scalerService.scaleWithHandle(shape, originalLocation, originalWidth, originalHeight, mousePoint, handle);
     }
 
     @Override
