@@ -148,7 +148,6 @@ public class DrawingController implements MouseListener, MouseMotionListener {
 
     private void handleSelectionMouseDragged(Point currentPoint) {
         if (activeHandle != Handle.NONE && scaleTargetShape != null) {
-
             scaleTargetShape.setLocation(new Point(scaleOriginalLocation));
             scaleTargetShape.setWidth(scaleOriginalWidth);
             scaleTargetShape.setHeight(scaleOriginalHeight);
@@ -159,13 +158,6 @@ public class DrawingController implements MouseListener, MouseMotionListener {
             appService.repaint();
         } else if (isDraggingShape) {
 
-            List<Shape> selectedShapes = appService.getSelectedShapes();
-            Point delta = new Point(currentPoint.x - lastDragPoint.x, currentPoint.y - lastDragPoint.y);
-
-            for (Shape shape : selectedShapes) {
-                Point currentLoc = shape.getLocation();
-                appService.move(shape, new Point(currentLoc.x + delta.x, currentLoc.y + delta.y));
-            }
             appService.repaint();
         }
     }
@@ -195,21 +187,12 @@ public class DrawingController implements MouseListener, MouseMotionListener {
         else if (isDraggingShape) {
             List<Shape> selectedShapes = appService.getSelectedShapes();
             if (!selectedShapes.isEmpty()) {
-
                 Point delta = new Point(
-                        lastDragPoint.x - start.x,
-                        lastDragPoint.y - start.y
+                        e.getPoint().x - start.x,
+                        e.getPoint().y - start.y
                 );
 
                 if (delta.x != 0 || delta.y != 0) {
-
-                    for (Shape shape : selectedShapes) {
-                        Point originalPos = moveStartPositions.get(shape);
-                        if (originalPos != null) {
-                            appService.move(shape, new Point(originalPos));
-                        }
-                    }
-
                     MoveShapeCommand moveCommand = new MoveShapeCommand(
                             appService, selectedShapes, delta
                     );
