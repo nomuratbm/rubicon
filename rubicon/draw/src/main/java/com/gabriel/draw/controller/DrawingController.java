@@ -324,27 +324,18 @@ public class DrawingController implements MouseListener, MouseMotionListener {
         currentShape.setColor(appService.getColor());
         currentShape.setFill(appService.getFill());
 
-        currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
-
         appService.setDrawMode(DrawMode.MousePressed);
     }
 
     private void handleDrawingMouseDragged(Point currentPoint) {
         if (currentShape != null) {
-
-            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
-
             appService.scale(currentShape, currentPoint);
-
-            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
+            appService.repaint();
         }
     }
 
     private void handleDrawingMouseReleased(MouseEvent e) {
         if (currentShape != null) {
-
-            currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
-
             Point endPoint = e.getPoint();
             appService.scale(currentShape, endPoint);
 
