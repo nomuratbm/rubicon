@@ -157,7 +157,21 @@ public class DrawingController implements MouseListener, MouseMotionListener {
             appService.scale(scaleTargetShape, newEnd);
             appService.repaint();
         } else if (isDraggingShape) {
-
+            Point delta = new Point(
+                    currentPoint.x - start.x,
+                    currentPoint.y - start.y
+            );
+            List<Shape> selectedShapes = appService.getSelectedShapes();
+            for (Shape shape : selectedShapes) {
+                Point originalPos = moveStartPositions.get(shape);
+                if (originalPos != null) {
+                    Point newLoc = new Point(
+                            originalPos.x + delta.x,
+                            originalPos.y + delta.y
+                    );
+                    shape.setLocation(newLoc);
+                }
+            }
             appService.repaint();
         }
     }
@@ -193,6 +207,13 @@ public class DrawingController implements MouseListener, MouseMotionListener {
                 );
 
                 if (delta.x != 0 || delta.y != 0) {
+                    for (Shape shape : selectedShapes) {
+                        Point originalPos = moveStartPositions.get(shape);
+                        if (originalPos != null) {
+                            shape.setLocation(new Point(originalPos));
+                        }
+                    }
+
                     MoveShapeCommand moveCommand = new MoveShapeCommand(
                             appService, selectedShapes, delta
                     );
@@ -249,39 +270,37 @@ public class DrawingController implements MouseListener, MouseMotionListener {
             bottom = originalLoc.y;
         }
 
-        switch (handle) {
-            case NW:
+        return switch (handle) {
+            case NW -> {
 
                 scaleTargetShape.setLocation(mousePoint);
-                return new Point(right, bottom);
-            case N:
+                yield new Point(right, bottom);
+            }
+            case N -> {
 
                 scaleTargetShape.setLocation(new Point(left, mousePoint.y));
-                return new Point(right, bottom);
-            case NE:
+                yield new Point(right, bottom);
+            }
+            case NE -> {
 
                 scaleTargetShape.setLocation(new Point(left, mousePoint.y));
-                return new Point(mousePoint.x, bottom);
-            case E:
-
-                return new Point(mousePoint.x, bottom);
-            case SE:
-
-                return new Point(mousePoint.x, mousePoint.y);
-            case S:
-
-                return new Point(right, mousePoint.y);
-            case SW:
+                yield new Point(mousePoint.x, bottom);
+            }
+            case E -> new Point(mousePoint.x, bottom);
+            case SE -> new Point(mousePoint.x, mousePoint.y);
+            case S -> new Point(right, mousePoint.y);
+            case SW -> {
 
                 scaleTargetShape.setLocation(new Point(mousePoint.x, top));
-                return new Point(right, mousePoint.y);
-            case W:
+                yield new Point(right, mousePoint.y);
+            }
+            case W -> {
 
                 scaleTargetShape.setLocation(new Point(mousePoint.x, top));
-                return new Point(right, bottom);
-            default:
-                return mousePoint;
-        }
+                yield new Point(right, bottom);
+            }
+            default -> mousePoint;
+        };
     }
 
     private void handleDrawingMousePressed(MouseEvent e) {
@@ -300,6 +319,7 @@ public class DrawingController implements MouseListener, MouseMotionListener {
             default:
                 return;
         }
+        appService.create(currentShape);
 
         currentShape.setColor(appService.getColor());
         currentShape.setFill(appService.getFill());
