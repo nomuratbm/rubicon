@@ -332,7 +332,7 @@ public class XmlDocumentService implements DocumentService {
             drawing.setColor(convertColor(map.getNamedItem("color").getNodeValue()));
             drawing.setFill(convertColor(map.getNamedItem("fill").getNodeValue()));
             drawing.setStartColor(convertColor(map.getNamedItem("startColor").getNodeValue()));
-            drawing.setColor(convertColor(map.getNamedItem("endColor").getNodeValue()));
+            drawing.setEndColor(convertColor(map.getNamedItem("endColor").getNodeValue()));
             x = Integer.parseInt(map.getNamedItem("startx").getNodeValue());
             y = Integer.parseInt(map.getNamedItem("starty").getNodeValue());
             drawing.setStart(new Point(x,y));
@@ -341,7 +341,7 @@ public class XmlDocumentService implements DocumentService {
             drawing.setEnd(new Point(x,y));
 
             drawing.setVisible(Boolean.parseBoolean(map.getNamedItem("visible").getNodeValue()));
-            drawing.setVisible(Boolean.parseBoolean(map.getNamedItem("gradient").getNodeValue()));
+            drawing.setGradient(Boolean.parseBoolean(map.getNamedItem("gradient").getNodeValue()));
 
             drawing.setWidth(Integer.parseInt(map.getNamedItem("width").getNodeValue()));
             drawing.setHeight(Integer.parseInt(map.getNamedItem("height").getNodeValue()));

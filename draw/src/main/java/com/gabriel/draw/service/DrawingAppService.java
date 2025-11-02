@@ -527,10 +527,10 @@ public class DrawingAppService implements AppService {
     public int getStarty() {
         Shape selectedShape = drawing.getSelectedShape();
         if(selectedShape==null) {
-            return drawing.getStart().x;
+            return drawing.getStart().y;
         }
         else {
-            return selectedShape.getStart().x;
+            return selectedShape.getStart().y;
         }
     }
 
