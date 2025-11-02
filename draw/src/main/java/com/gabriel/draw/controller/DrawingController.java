@@ -15,13 +15,24 @@ import com.gabriel.drawfx.service.AppService;
 import com.gabriel.drawfx.model.Shape;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Map;
 
 public class DrawingController  implements MouseListener, MouseMotionListener, KeyListener {
     Point start;
     private Point end;
+    private Point click;
+
+    private Map<Shape, Point> originalLocations = new HashMap<>();
+    private Point originalShapeLocation;
+    private int originalShapeWidth;
+    private int originalShapeHeight;
+    private Point originalShapeStart;
+    private Point originalShapeEnd;
+    private boolean isDragging = false;
 
     private final AppService appService;
     private final Drawing drawing;
@@ -53,10 +64,34 @@ public class DrawingController  implements MouseListener, MouseMotionListener, K
     public void mousePressed(MouseEvent e) {
         if(appService.getDrawMode() == DrawMode.Idle) {
             start = e.getPoint();
+            click = new Point(start);
+            isDragging = false;
+
             ShapeMode currentShapeMode = appService.getShapeMode();
             if(currentShapeMode == ShapeMode.Select) {
                 appService.search(start, !e.isControlDown());
-
+                originalLocations.clear();
+                Shape selectedShape = drawing.getSelectedShape();
+                if (selectedShape != null) {
+                    if (selectedShape.getSelectionMode() == SelectionMode.None) {
+                        List<Shape> shapes = drawing.getShapes();
+                        for (Shape shape : shapes) {
+                            if (shape.isSelected()) {
+                                originalLocations.put(shape, new Point(shape.getLocation()));
+                            }
+                        }
+                    } else {
+                        originalShapeLocation = new Point(selectedShape.getLocation());
+                        originalShapeWidth = selectedShape.getWidth();
+                        originalShapeHeight = selectedShape.getHeight();
+                        if (selectedShape.getStart() != null) {
+                            originalShapeStart = new Point(selectedShape.getStart());
+                        }
+                        if (selectedShape.getEnd() != null) {
+                            originalShapeEnd = new Point(selectedShape.getEnd());
+                        }
+                    }
+                }
             }
             else {
                 if(currentShape!=null){
@@ -106,21 +141,26 @@ public class DrawingController  implements MouseListener, MouseMotionListener, K
         if(appService.getDrawMode() == DrawMode.MousePressed) {
             if (appService.getShapeMode() == ShapeMode.Select) {
                 Shape selectedShape = drawing.getSelectedShape();
-                if (selectedShape != null) {
+                if (selectedShape != null && isDragging) {
                     if (selectedShape.getSelectionMode() == SelectionMode.None) {
-                        List<Shape> shapes = drawing.getShapes();
-                        for (Shape shape : shapes) {
-                            if (shape.isSelected()) {
-                                shape.getRendererService().render(drawingView.getGraphics(), shape, true);
-                                appService.move(shape, start, end);
-                                shape.getRendererService().render(drawingView.getGraphics(), shape, false);
-                            }
+                        for (Map.Entry<Shape, Point> entry : originalLocations.entrySet()) {
+                            entry.getKey().setLocation(new Point(entry.getValue()));
                         }
+                        appService.move(click, end);
                     } else {
-                        appService.scale(selectedShape, start, end);
+                        selectedShape.setLocation(new Point(originalShapeLocation));
+                        selectedShape.setWidth(originalShapeWidth);
+                        selectedShape.setHeight(originalShapeHeight);
+                        if (originalShapeStart != null) {
+                            selectedShape.setStart(new Point(originalShapeStart));
+                        }
+                        if (originalShapeEnd != null) {
+                            selectedShape.setEnd(new Point(originalShapeEnd));
+                        }
+                        appService.scale(selectedShape, click, end);
                         Normalizer.normalize(selectedShape);
-                        drawingView.repaint();
                     }
+                    drawingView.repaint();
                 }
             }
             else {
@@ -141,6 +181,7 @@ public class DrawingController  implements MouseListener, MouseMotionListener, K
                 drawingView.repaint();
             }
             appService.setDrawMode(DrawMode.Idle);
+            isDragging = false;
         }
         propertySheet.populateTable(appService);
         drawingView.repaint();
@@ -159,26 +200,63 @@ public class DrawingController  implements MouseListener, MouseMotionListener, K
     @Override
     public void mouseDragged(MouseEvent e) {
         if(appService.getDrawMode() == DrawMode.MousePressed) {
+            isDragging = true;
             end = e.getPoint();
+
             if(drawing.getShapeMode() == ShapeMode.Select){
                 Shape selectedShape = drawing.getSelectedShape();
                 if(selectedShape != null){
                     if(selectedShape.getSelectionMode() == SelectionMode.None){
-                        List<Shape> shapes =drawing.getShapes();
+                        List<Shape> shapes = drawing.getShapes();
+                        int dx = end.x - start.x;
+                        int dy = end.y - start.y;
+
                         for(Shape shape : shapes) {
                             if (shape.isSelected()) {
                                 shape.getRendererService().render(drawingView.getGraphics(), shape, true);
-                                appService.move(shape, start, end);
+                                shape.getLocation().x += dx;
+                                shape.getLocation().y += dy;
                                 shape.getRendererService().render(drawingView.getGraphics(), shape, true);
                             }
                         }
                     }
                     else {
-                        appService.scale(selectedShape, start, end);
+                        int dx = end.x - start.x;
+                        int dy = end.y - start.y;
+                        int height = selectedShape.getHeight();
+                        int width = selectedShape.getWidth();
+
+                        if(selectedShape.getSelectionMode() == SelectionMode.UpperLeft) {
+                            selectedShape.getLocation().x += dx;
+                            selectedShape.getLocation().y += dy;
+                            selectedShape.setWidth(width - dx);
+                            selectedShape.setHeight(height - dy);
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.LowerLeft) {
+                            selectedShape.getLocation().x += dx;
+                            selectedShape.setWidth(width -dx);
+                            selectedShape.setHeight(height + dy);
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.UpperRight){
+                            selectedShape.getLocation().y += dy;
+                            selectedShape.setWidth(width + dx);
+                            selectedShape.setHeight(height - dy);
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.LowerRight){
+                            selectedShape.setWidth(width + dx);
+                            selectedShape.setHeight(height+ dy);
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.MiddleRight){
+                            selectedShape.setWidth(width + dx);
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.MiddleLeft){
+                            selectedShape.setWidth(width - dx);
+                            selectedShape.getLocation().x += dx;
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.MiddleTop) {
+                            selectedShape.setHeight(height - dy);
+                            selectedShape.getLocation().y += dy;
+                        } else if(selectedShape.getSelectionMode() == SelectionMode.MiddleBottom){
+                            selectedShape.setHeight(height + dy);
+                        }
+                        drawingView.repaint();
                     }
                 }
                 start = end;
-
             }
             else {
                 currentShape.getRendererService().render(drawingView.getGraphics(), currentShape, true);
