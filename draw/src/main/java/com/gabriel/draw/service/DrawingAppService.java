@@ -4,6 +4,7 @@ import com.gabriel.draw.view.DrawingView;
 import com.gabriel.drawfx.DrawMode;
 import com.gabriel.drawfx.SelectionMode;
 import com.gabriel.drawfx.ShapeMode;
+import com.gabriel.drawfx.command.CommandService;
 import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
 import com.gabriel.drawfx.service.*;
@@ -40,12 +41,14 @@ public class DrawingAppService implements AppService {
 
     @Override
     public void undo() {
-
+        CommandService.undo();
+        drawingView.repaint();
     }
 
     @Override
     public void redo() {
-
+        CommandService.redo();
+        drawingView.repaint();
     }
 
     @Override
@@ -96,7 +99,18 @@ public class DrawingAppService implements AppService {
 
     @Override
     public void setFill(Color color) {
-        drawing.setFill(color);
+        List<Shape> shapes = drawing.getShapes();
+        boolean isEmpty = true;
+        for (Shape shape : shapes) {
+            if (shape.isSelected()) {
+                shape.setFill(color);
+                shape.getRendererService().render(drawingView.getGraphics(), shape, false);
+                isEmpty = false;
+            }
+        }
+        if(isEmpty){
+            drawing.setFill(color);
+        }
     }
 
     @Override

@@ -27,6 +27,6 @@ public class SetFillCommand implements Command {
 
     @Override
     public void redo() {
-        appService.setFill(fill);
+        execute();
     }
 }

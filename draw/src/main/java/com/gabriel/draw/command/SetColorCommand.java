@@ -27,6 +27,6 @@ public class SetColorCommand implements Command {
 
     @Override
     public void redo() {
-        appService.setColor(color);
+        execute();
     }
 }

@@ -39,9 +39,11 @@ public class ActionController implements ActionListener {
         String cmd = e.getActionCommand();
         if (ActionCommand.UNDO.equals(cmd)) {
             appService.undo();
+            component.repaint();
         }
         if (ActionCommand.REDO.equals(cmd)) {
             appService.redo();
+            component.repaint();
         } else if (ActionCommand.LINE.equals(cmd)) {
             appService.setShapeMode(ShapeMode.Line);
         } else if (ActionCommand.RECT.equals(cmd)) {
@@ -57,18 +59,25 @@ public class ActionController implements ActionListener {
             imageFileService.setImage(drawing);
         } else if (ActionCommand.COLOR.equals(cmd)) {
             Color color = JColorChooser.showDialog(component, "Select color", appService.getColor());
-            appService.setColor(color);
+            if (color != null) {
+                appService.setColor(color);
+                component.repaint();
+            }
         } else if (ActionCommand.FONT.equals(cmd)) {
-            getFont();
+                getFont();
         } else if (ActionCommand.TEXT.equals(cmd)) {
             if(drawing.getFont() == null) {
                 getFont();
             }
             appService.setShapeMode(ShapeMode.Text);
         } else if (ActionCommand.FILL.equals(cmd)) {
-            Color color = JColorChooser.showDialog(component, "Select color", appService.getColor());
-            Color newColor = new Color(color.getRed(),color.getGreen(), color.getBlue(), color.getAlpha() );
-            appService.setFill(newColor );
+            Color currFill = appService.getFill();
+            Color fill = JColorChooser.showDialog(component, "Select fill",
+                    currFill != null ? currFill : Color.WHITE);
+            if (fill != null) {
+                appService.setFill(fill);
+                component.repaint();
+            }
         } else if (ActionCommand.SAVEAS.equals(cmd)) {
             FileDialog fDialog = new FileDialog(frame, "Save", FileDialog.SAVE);
             fDialog.setFile(drawing.getFilename());
