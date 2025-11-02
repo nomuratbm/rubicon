@@ -196,9 +196,5 @@ public class PropertySheet extends PropertyPanel {
                         new DoubleZeroPolicyValidator(false)
                 )
         );
-        ActionProperty prop9 = new ActionProperty("Press me", () -> {
-            System.out.println("Pressed");
-        });
-        propertyTable.addProperty(prop9);
     }
 }

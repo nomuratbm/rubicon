@@ -31,7 +31,7 @@
 	</dependency >
 	<dependency >
 		<groupId >com.gabriel</groupId >
-		<artifactId >prop</artifactId >
+		<artifactId >property</artifactId >
 		<version >1.0-SNAPSHOT</version >
 	</dependency >
 	<dependency >
@@ -47,7 +47,7 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>3.0.0</version>
 				<configuration>
-					<mainClass>com.gabriel.draw.Main</mainClass>
+					<mainClass>com.gabriel.draw.SplashFrame</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
