@@ -61,7 +61,6 @@ public class PropertySheet extends PropertyPanel {
     public void populateTable(AppService appService) {
         Drawing drawing = appService.getDrawing();
         propertyTable = this;
-        propertyTable.addEventListener(new PropertyEventListener(appService));
 
         propertyTable.clear();
         Shape shape  = appService.getSelectedShape();
