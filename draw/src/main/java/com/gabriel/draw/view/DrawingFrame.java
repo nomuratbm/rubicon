@@ -1,5 +1,6 @@
 package com.gabriel.draw.view;
 
+import com.gabriel.draw.command.*;
 import com.gabriel.draw.component.PropertySheet;
 import com.gabriel.draw.controller.ActionController;
 import com.gabriel.draw.controller.DrawingController;
@@ -7,6 +8,8 @@ import com.gabriel.draw.controller.DrawingWindowController;
 import com.gabriel.draw.service.DrawingAppService;
 import com.gabriel.draw.service.DrawingCommandAppService;
 import com.gabriel.drawfx.ShapeMode;
+import com.gabriel.drawfx.command.Command;
+import com.gabriel.drawfx.command.CommandService;
 import com.gabriel.drawfx.model.Drawing;
 import com.gabriel.drawfx.model.Shape;
 import com.gabriel.drawfx.service.AppService;
@@ -122,59 +125,114 @@ public class DrawingFrame extends JFrame {
                     appService.setShapeMode((ShapeMode) property.getValue());
                 }
             }
-            if(property.getName().equals("Fore color")){
+            else if(property.getName().equals("Fore color")){
                 if(shape ==null) {
                     appService.setColor((Color) property.getValue());
                 } else {
-                    shape.setColor((Color) property.getValue());
+                    Command command = new SetColorCommand(appService, (Color) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("Fill color")){
+            else if(property.getName().equals("Fill color")){
                 if(shape ==null) {
                     appService.setFill((Color)property.getValue());
                 } else {
-                    shape.setFill((Color) property.getValue());
+                    Command command = new SetFillCommand(appService, (Color) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("Line Thickness")){
+            else if(property.getName().equals("Line Thickness")){
                 if(shape ==null) {
                     appService.setThickness((int)property.getValue());
                 } else {
-                    shape.setThickness((int) property.getValue());
+                    Command command = new SetThicknessCommand(appService, (int) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("X Location")){
-                if(shape ==null) {
-                    ;
-                } else {
-                    Point p = shape.getLocation();
-                    p.x = (int) property.getValue();
-                    shape.setLocation(p);
+            else if(property.getName().equals("X Location")){
+                if(shape != null) {
+                    Command command = SetLocationCommand.forX(appService, (int) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("Y Location")){
-                if(shape ==null) {
-                    ;
-                } else {
-                    Point p = shape.getLocation();
-                    p.y = (int) property.getValue();
-                    shape.setLocation(p);
+            else if(property.getName().equals("Y Location")){
+                if(shape != null) {
+                    Command command = SetLocationCommand.forY(appService, (int) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("Width")){
-                if(shape ==null) {
-                    ;
-                } else {
-                    int width = shape.getWidth();
-                    shape.setWidth(width);
+            else if(property.getName().equals("Width")){
+                if(shape != null) {
+                    Command command = SetDimensionsCommand.forWidth(appService, (int) property.getValue());
+                    CommandService.ExecuteCommand(command);
                 }
             }
-            if(property.getName().equals("Height")){
-                if(shape ==null) {
-                    ;
-                } else {
-                    int height = (int) property.getValue();
-                    shape.setHeight(height);
+            else if(property.getName().equals("Height")){
+                if(shape != null) {
+                    Command command = SetDimensionsCommand.forHeight(appService, (int) property.getValue());
+                    CommandService.ExecuteCommand(command);
+                }
+            }
+            else if(property.getName().equals("Text")){
+                if(shape != null) {
+                    Command command = new SetTextCommand(appService, (String) property.getValue());
+                    CommandService.ExecuteCommand(command);
+                }
+            }
+            else if(property.getName().equals("Font size")){
+                if(shape != null) {
+                    Font font = shape.getFont();
+                    if(font != null) {
+                        Font newFont = new Font(font.getFamily(), font.getStyle(), (int) property.getValue());
+                        Command command = new SetFontCommand(appService, newFont);
+                        CommandService.ExecuteCommand(command);
+                    }
+                }
+            }
+            else if(property.getName().equals("Font family")){
+                if(shape != null) {
+                    Font font = shape.getFont();
+                    if(font != null) {
+                        Font newFont = new Font((String) property.getValue(), font.getStyle(), font.getSize());
+                        Command command = new SetFontCommand(appService, newFont);
+                        CommandService.ExecuteCommand(command);
+                    }
+                }
+            }
+            else if(property.getName().equals("Font style")){
+                if(shape != null) {
+                    Font font = shape.getFont();
+                    if(font != null) {
+                        Font newFont = new Font(font.getFamily(), (int) property.getValue(), font.getSize());
+                        Command command = new SetFontCommand(appService, newFont);
+                        CommandService.ExecuteCommand(command);
+                    }
+                }
+            }
+            else if(property.getName().equals("Start color")){
+                if(shape != null) {
+                    Command command = new SetGradientCommand(appService, shape.isGradient(),
+                            (Color) property.getValue(), shape.getEndColor());
+                    CommandService.ExecuteCommand(command);
+                }
+            }
+            else if(property.getName().equals("End color")){
+                if(shape != null) {
+                    Command command = new SetGradientCommand(appService, shape.isGradient(),
+                            shape.getStartColor(), (Color) property.getValue());
+                    CommandService.ExecuteCommand(command);
+                }
+            }
+            else if(property.getName().equals("IsGradient")){
+                if(shape != null) {
+                    Command command = new SetGradientCommand(appService, (Boolean) property.getValue(),
+                            shape.getStartColor(), shape.getEndColor());
+                    CommandService.ExecuteCommand(command);
+                }
+            }
+            else if(property.getName().equals("IsVisible")){
+                if(shape != null) {
+                    shape.setVisible((Boolean) property.getValue());
                 }
             }
 

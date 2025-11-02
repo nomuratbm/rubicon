@@ -41,14 +41,12 @@ public class DrawingAppService implements AppService {
 
     @Override
     public void undo() {
-        CommandService.undo();
-        drawingView.repaint();
+
     }
 
     @Override
     public void redo() {
-        CommandService.redo();
-        drawingView.repaint();
+
     }
 
     @Override

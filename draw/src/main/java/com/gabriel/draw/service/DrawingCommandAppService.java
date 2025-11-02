@@ -69,13 +69,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setColor(Color color) {
-        if (appService.getSelectedShapes().isEmpty()) {
-            Command command = new SetColorCommand(appService, color);
-            CommandService.ExecuteCommand(command);
-        } else {
-            appService.setColor(color);
-        }
-
+        Command command = new SetColorCommand(appService, color);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -85,12 +80,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setFill(Color color) {
-        if (appService.getSelectedShapes().isEmpty()) {
-            Command command = new SetFillCommand(appService, color);
-            CommandService.ExecuteCommand(command);
-        } else {
-            appService.setFill(color);
-        }
+        Command command = new SetFillCommand(appService, color);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -211,12 +202,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setThickness(int thickness) {
-        if (appService.getSelectedShapes().isEmpty()) {
-            Command command = new SetThicknessCommand(appService, thickness);
-            CommandService.ExecuteCommand(command);
-        } else {
-            appService.setThickness(thickness);
-        }
+        Command command = new SetThicknessCommand(appService, thickness);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -226,7 +213,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setXLocation(int xLocation) {
-        appService.setXLocation(xLocation);
+        Command command = SetLocationCommand.forX(appService, xLocation);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -236,7 +224,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setYLocation(int yLocation) {
-        appService.setYLocation(yLocation);
+        Command command = SetLocationCommand.forY(appService, yLocation);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -246,7 +235,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setWidth(int width) {
-        appService.setWidth(width);
+        Command command = SetDimensionsCommand.forWidth(appService, width);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -256,7 +246,8 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void setHeight(int height) {
-        appService.setHeight(height);
+        Command command = SetDimensionsCommand.forHeight(appService, height);
+        CommandService.ExecuteCommand(command);
     }
 
     @Override
@@ -284,7 +275,8 @@ public class DrawingCommandAppService implements AppService {
         Font font = appService.getFont();
         if (font != null) {
             Font newFont = new Font(font.getFamily(), font.getStyle(), fontSize);
-            appService.setFont(newFont);
+            Command command = new SetFontCommand(appService, newFont);
+            CommandService.ExecuteCommand(command);
         }
     }
 
