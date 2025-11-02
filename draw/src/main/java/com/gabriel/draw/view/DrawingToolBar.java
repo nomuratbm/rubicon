@@ -50,6 +50,9 @@ public class DrawingToolBar extends JToolBar {
         button = makeNavigationButton("image",ActionCommand.IMAGE,"Add an  image",ActionCommand.IMAGE);
         add(button);
 
+        //separator
+        addSeparator();
+
         button = makeNavigationButton("select",ActionCommand.SELECT,"Switch to select",ActionCommand.SELECT);
         add(button);
 
@@ -59,15 +62,12 @@ public class DrawingToolBar extends JToolBar {
         button = makeNavigationButton("font",ActionCommand.FONT,"Select another font ",ActionCommand.FONT);
         add(button);
 
-        //separator
-        addSeparator();
-
         //fourth button
         button = makeNavigationButton("delete", ActionCommand.DELETE, "Delete selected shape", ActionCommand.DELETE);
         add(button);
 
         //fifth component is NOT a button!
-        JTextField textField = new JTextField("");
+        JTextField textField = new JTextField("Ryan Reimann Layno - AM2");
         textField.setColumns(10);
         textField.addActionListener(actionListener);
         textField.setActionCommand("TEXT_ENTERED");

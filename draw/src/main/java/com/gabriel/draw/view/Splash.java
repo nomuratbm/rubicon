@@ -33,14 +33,19 @@ public class Splash extends JPanel implements MouseListener {
         setLayout(null);
 
         gPanel = new GPanel("GoDraw");
-        gPanel.setBounds(1100,700,150,50);
+        gPanel.setBounds(1200,340,509,313);
         gPanel.addMouseListener(this);
         this.add(gPanel);
     }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, this); // see javadoc for more info on the parameters
+
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+        int imgX = (panelWidth - width) / 2;
+        int imgY = (panelHeight - height) / 2;
+        g.drawImage(image, imgX, imgY, this); // see javadoc for more info on the parameters
     }
 
     @Override

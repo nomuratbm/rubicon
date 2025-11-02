@@ -322,7 +322,12 @@ public class DrawingCommandAppService implements AppService {
 
     @Override
     public void delete() {
-        appService.delete();
+        List<Shape> selectedShapes = appService.getSelectedShapes();
+
+        if (!selectedShapes.isEmpty()) {
+            Command command = new DeleteShapeCommand(appService, selectedShapes);
+            CommandService.ExecuteCommand(command);
+        }
     }
 
     @Override
