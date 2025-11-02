@@ -16,5 +16,5 @@ public class ActionCommand {
     static final public String SAVE = "save";
     static final public String OPEN = "open";
     static final public String SAVEAS = "saveas";
-    static final public String NEW= "new";
+    static final public String NEW = "new";
 }
