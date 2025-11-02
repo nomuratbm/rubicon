@@ -123,22 +123,22 @@ public class PropertySheet extends PropertyPanel {
         ColorProperty currentEndColorProp = new ColorProperty("End color",  appService.getEndColor());
         propertyTable.addProperty(currentEndColorProp);
 
-        IntegerProperty startx = new IntegerProperty("Start x", appService.getXLocation());
+        IntegerProperty startx = new IntegerProperty("Start x", appService.getStartX());
         propertyTable.addProperty(startx );
 
-        IntegerProperty starty = new IntegerProperty("Start y", appService.getXLocation());
+        IntegerProperty starty = new IntegerProperty("Start y", appService.getStarty());
         propertyTable.addProperty(starty );
 
-        IntegerProperty endx = new IntegerProperty("End x", appService.getXLocation());
+        IntegerProperty endx = new IntegerProperty("End x", appService.getEndx());
         propertyTable.addProperty(endx );
 
-        IntegerProperty endy = new IntegerProperty("End y", appService.getXLocation());
+        IntegerProperty endy = new IntegerProperty("End y", appService.getEndy());
         propertyTable.addProperty(endy );
 
         BooleanProperty isGradientProp = new BooleanProperty("IsGradient",  appService.isGradient() );
         propertyTable.addProperty(isGradientProp);
 
-        BooleanProperty isVisibleProp = new BooleanProperty("IsVisible",  appService.isGradient() );
+        BooleanProperty isVisibleProp = new BooleanProperty("IsVisible",  appService.isVisible() );
         propertyTable.addProperty(isVisibleProp);
 
         IntegerProperty lineThicknessProp = new IntegerProperty("Line Thickness", appService.getThickness());
@@ -150,10 +150,10 @@ public class PropertySheet extends PropertyPanel {
         IntegerProperty ylocProp = new IntegerProperty("Y Location", appService.getYLocation());
         propertyTable.addProperty(ylocProp);
 
-        IntegerProperty width = new IntegerProperty("Width", appService.getXLocation());
+        IntegerProperty width = new IntegerProperty("Width", appService.getWidth());
         propertyTable.addProperty(width );
 
-        IntegerProperty height = new IntegerProperty("Height", appService.getXLocation());
+        IntegerProperty height = new IntegerProperty("Height", appService.getHeight());
         propertyTable.addProperty(height);
 
         BooleanProperty prop3 = new BooleanProperty("Boolean", true);
@@ -196,5 +196,6 @@ public class PropertySheet extends PropertyPanel {
                         new DoubleZeroPolicyValidator(false)
                 )
         );
+        propertyTable.addProperty(prop8);
     }
 }
