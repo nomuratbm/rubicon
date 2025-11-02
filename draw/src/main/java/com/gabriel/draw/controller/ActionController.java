@@ -158,6 +158,8 @@ public class ActionController implements ActionListener {
 
             // TODO Insert the handler for the File menuitems.
 
+        } else if (ActionCommand.DELETE.equals(cmd)) {
+            appService.delete(shape);
         }
     }
     void getFont() {

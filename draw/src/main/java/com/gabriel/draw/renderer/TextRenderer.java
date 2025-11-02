@@ -29,10 +29,15 @@ public class TextRenderer extends ShapeRenderer {
             g2.drawRect(x, y, width, height);
         } else {
 //            g2.setColor(shape.getColor());
+            FontMetrics fm = g2.getFontMetrics(shape.getFont());
+            int textHeight = fm.getHeight();
+            int ascent = fm.getAscent();
+            int baselineY = y + ascent;
+
             GradientPaint gp = new GradientPaint(x, x, shape.getFill(), x+width, y+height, Color.BLACK);
             g2.setPaint(gp);
             g2.setFont(shape.getFont());
-            g2.drawString(shape.getText(), shape.getLocation().x, shape.getLocation().y);
+            g2.drawString(shape.getText(), shape.getLocation().x, baselineY);
         }
         super.render(g, shape, xor);
     }

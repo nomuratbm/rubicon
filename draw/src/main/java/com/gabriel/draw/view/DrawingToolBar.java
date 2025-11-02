@@ -20,18 +20,21 @@ public class DrawingToolBar extends JToolBar {
         this.actionListener = actionListener;
         addButtons();
 
-        textArea = new JTextArea(5, 30);
-        textArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        add(scrollPane, BorderLayout.CENTER);
-
-        //Lay out the main panel.
-        setPreferredSize(new Dimension(200, 30));
-        setBackground(Color.GREEN);
+        setPreferredSize(new Dimension(200, 40));
+        setBackground(Color.WHITE);
     }
 
     protected void addButtons() {
         JButton button = null;
+
+        button = makeNavigationButton("undo", ActionCommand.UNDO, "Undo",ActionCommand.UNDO);
+        add(button);
+
+        button = makeNavigationButton("redo", ActionCommand.REDO, "Redo",ActionCommand.REDO);
+        add(button);
+
+        addSeparator();
+
         button = makeNavigationButton("rect", ActionCommand.RECT, "Draw a rectangle",ActionCommand.RECT);
         add(button);
 
@@ -60,10 +63,7 @@ public class DrawingToolBar extends JToolBar {
         addSeparator();
 
         //fourth button
-        button = new JButton("Another button");
-        button.setActionCommand("SOMETHING_ELSE");
-        button.setToolTipText("Something else");
-        button.addActionListener(actionListener);
+        button = makeNavigationButton("delete", ActionCommand.DELETE, "Delete selected shape", ActionCommand.DELETE);
         add(button);
 
         //fifth component is NOT a button!
@@ -89,6 +89,8 @@ public class DrawingToolBar extends JToolBar {
         button.setActionCommand(actionCommand);
         button.setToolTipText(toolTipText);
         button.addActionListener(actionListener);
+        button.setOpaque(false);
+        button.setBorderPainted(false);
 
         if (imageURL != null) {                      //image found
             button.setIcon(new ImageIcon(imageURL, altText));
